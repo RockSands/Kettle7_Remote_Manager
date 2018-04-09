@@ -1,0 +1,10 @@
+server:
+  port: 8080
+  context-path: /catchPerfer
+spring:
+  profiles:
+    active: dev
+  http:
+    encoding: 
+      charset: UTF-8
+      enabled: true
