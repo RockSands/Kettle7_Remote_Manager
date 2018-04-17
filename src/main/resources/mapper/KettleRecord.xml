@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.katch.perfer.mybatis.mapper.KettleRecordMapper">
+	<resultMap id="KettleRecordMap" type="com.katch.perfer.mybatis.model.KettleRecord">
+		<id column="UUID" property="uuid" />
+		<id column="ID_JOB" property="jobid" />
+		<result column="NAME_JOB" property="name" />
+		<result column="ID_RUN" property="runID" />
+		<result column="STATUS" property="status" />
+		<result column="HOSTNAME" property="hostname" />
+		<result column="EXECUTION_TYPE" property="executionType" />
+		<result column="CRON_EXPRESSION" property="cronExpression" />
+		<result column="ERROR_MSG" property="errMsg" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="UPDATE_TIME" property="updateTime" />
+	</resultMap>
+
+	<resultMap id="KettleRecordRelationMap"
+		type="com.katch.perfer.mybatis.model.KettleRecordRelation">
+		<result column="MASTER_UUID_ID" property="masterUUID" />
+		<result column="META_ID" property="metaid" />
+		<result column="META_TYPE" property="type" />
+		<result column="CREATE_TIME" property="createTime" />
+	</resultMap>
+
+	<sql id="KettleRecord_Column_List">
+		UUID, ID_JOB, NAME_JOB, ID_RUN, STATUS, HOSTNAME,
+		EXECUTION_TYPE
+		CRON_EXPRESSION, ERROR_MSG, CREATE_TIME, UPDATE_TIME
+	</sql>
+
+	<sql id="KettleRecordRelation_Column_List">
+		MASTER_UUID_ID, META_ID, META_TYPE, CREATE_TIME
+	</sql>
+
+	<select id="queryRecord" resultMap="KettleRecordMap">
+		SELECT
+		<include refid="KettleRecord_Column_List" />
+		FROM
+		R_RECORD_JOB
+		WHERE
+		UUID = #{uuid}
+	</select>
+
+	<select id="allWaitingRecords" resultMap="KettleRecordMap">
+		SELECT
+		<include refid="KettleRecord_Column_List" />
+		FROM
+		R_RECORD_JOB
+		WHERE
+		CRON_EXPRESSION IS NULL
+		AND
+		STATUS IN
+		('RUNNING','APPLY')
+	</select>
+
+	<select id="allStopRecord" resultMap="KettleRecordMap">
+		SELECT
+		<include refid="KettleRecord_Column_List" />
+		FROM
+		R_RECORD_JOB
+		WHERE
+		EXECUTION_TYPE = 'ONCE'
+		AND
+		STATUS IN
+		('FINISHED','RECORD_STATUS_ERROR')
+	</select>
+
+	<select id="queryRecordRelations" parameterType="string"
+		resultMap="KettleRecordRelationMap">
+		SELECT
+		<include refid="KettleRecordRelation_Column_List" />
+		FROM R_RECORD_DEPENDENT
+		WHERE MASTER_UUID_ID = #{masterUuid}
+	</select>
+
+	<insert id="insertRecord" parameterType="com.katch.perfer.mybatis.model.KettleRecord">
+		INSERT INTO
+		R_RECORD_JOB
+		(UUID, ID_JOB, NAME_JOB, ID_RUN, STATUS, HOSTNAME,
+		EXECUTION_TYPE,
+		CRON_EXPRESSION,
+		ERROR_MSG, CREATE_TIME, UPDATE_TIME)
+		VALUES
+		(#{uuid},#{jobid},#{name},#{runID},#{status},#{hostname},#{executionType},#{cronExpression},#{errMsg},#{createTime},#{updateTime})
+	</insert>
+
+	<insert id="insertRecordRelations">
+		INSERT INTO
+		R_RECORD_DEPENDENT
+		(MASTER_UUID_ID, META_ID, META_TYPE,
+		CREATE_TIME)
+		VALUES
+		<foreach collection="list" item="item" separator=",">
+			(#{item.masterUUID},#{item.metaid},#{item.type},#{item.createTime})
+		</foreach>
+	</insert>
+
+	<update id="updateRecord" parameterType="com.katch.perfer.mybatis.model.KettleRecord">
+		UPDATE
+		R_RECORD_JOB
+		SET
+		<if test="jobid != null">ID_JOB = #{jobid},</if>
+		<if test="name != null">NAME_JOB = #{name},</if>
+		<if test="runID != null">ID_RUN = #{runID},</if>
+		<if test="status != null">STATUS = #{status},</if>
+		<if test="hostname != null">HOSTNAME = #{hostname},</if>
+		<if test="executionType != null">EXECUTION_TYPE = #{executionType},</if>
+		<if test="cronExpression != null">CRON_EXPRESSION = #{cronExpression},</if>
+		<if test="errMsg != null">ERROR_MSG = #{errMsg},</if>
+		<if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+		UUID = #{uuid}
+		WHERE
+		UUID = #{uuid}
+	</update>
+
+	<update id="updateRecordRelationID">
+		UPDATE
+		R_RECORD_DEPENDENT
+		SET
+		META_ID = #{newID},
+		CREATE_TIME = #{createTime}
+		WHERE
+		META_ID = #{oldID}
+	</update>
+
+	<delete id="deleteRecord" parameterType="string">
+		DELETE FROM R_RECORD_JOB
+		WHERE
+		UUID =#{uuid}
+	</delete>
+
+	<delete id="deleteRecordRelations" parameterType="string">
+		DELETE FROM
+		R_RECORD_DEPENDENT WHERE
+		MASTER_UUID_ID =#{masterUUID}
+	</delete>
+</mapper>
