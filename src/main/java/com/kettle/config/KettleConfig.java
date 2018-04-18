@@ -13,6 +13,10 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.kettle.core.record.KettleRecordPool;
+import com.kettle.core.remote.KettleRemotePool;
+import com.kettle.repository.KettleRepoRepository;
+
 @Configuration
 @EnableAutoConfiguration
 public class KettleConfig {
@@ -41,5 +45,15 @@ public class KettleConfig {
 		}
 		logger.info("Kettle初始化发现注册的服务端[" + slaves + "]!");
 		return repository;
+	}
+
+	@Bean
+	public KettleRemotePool kettleRemotePool(KettleRepoRepository kettleRepoRepository) throws KettleException {
+		return new KettleRemotePool(kettleRepoRepository);
+	}
+
+	@Bean
+	public KettleRecordPool kettleRecordPool() throws KettleException {
+		return new KettleRecordPool();
 	}
 }

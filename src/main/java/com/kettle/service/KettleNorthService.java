@@ -2,19 +2,15 @@ package com.kettle.service;
 
 import org.pentaho.di.core.exception.KettleException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.kettle.bean.KettleJobEntireDefine;
 import com.kettle.bean.KettleResult;
-import com.kettle.model.KettleRecord;
+import com.kettle.model.record.KettleRecord;
 
 @Service
 public class KettleNorthService {
 	@Autowired
-	@Qualifier("remoteSerialRecordService")
-	@Lazy
 	private KettleJobService kettleJobService;
 
 	/**

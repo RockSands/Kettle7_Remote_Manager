@@ -28,8 +28,8 @@ import org.springframework.stereotype.Component;
 import com.kettle.bean.KettleJobEntireDefine;
 import com.kettle.config.KettleRepoProperties;
 import com.kettle.consist.KettleVariables;
-import com.kettle.model.KettleRecord;
-import com.kettle.model.KettleRecordRelation;
+import com.kettle.model.record.KettleRecord;
+import com.kettle.model.record.KettleRecordRelation;
 
 /**
  * Kettle资源库

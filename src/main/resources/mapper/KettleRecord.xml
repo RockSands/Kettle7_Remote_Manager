@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.katch.perfer.mybatis.mapper.KettleRecordMapper">
-	<resultMap id="KettleRecordMap" type="com.katch.perfer.mybatis.model.KettleRecord">
+<mapper namespace="com.kettle.mapper.KettleRecordMapper">
+	<resultMap id="KettleRecordMap" type="com.kettle.model.record.KettleRecord">
 		<id column="UUID" property="uuid" />
 		<id column="ID_JOB" property="jobid" />
 		<result column="NAME_JOB" property="name" />
@@ -17,7 +17,7 @@
 	</resultMap>
 
 	<resultMap id="KettleRecordRelationMap"
-		type="com.katch.perfer.mybatis.model.KettleRecordRelation">
+		type="com.kettle.model.record.KettleRecordRelation">
 		<result column="MASTER_UUID_ID" property="masterUUID" />
 		<result column="META_ID" property="metaid" />
 		<result column="META_TYPE" property="type" />
@@ -42,29 +42,27 @@
 		WHERE
 		UUID = #{uuid}
 	</select>
-
-	<select id="allWaitingRecords" resultMap="KettleRecordMap">
+	
+	<select id="queryRunningRecordsByHostName" resultMap="KettleRecordMap">
 		SELECT
 		<include refid="KettleRecord_Column_List" />
 		FROM
 		R_RECORD_JOB
 		WHERE
-		CRON_EXPRESSION IS NULL
+		HOSTNAME = #{hostname}
 		AND
-		STATUS IN
-		('RUNNING','APPLY')
+		STATUS = 'APPLY'
 	</select>
 
-	<select id="allStopRecord" resultMap="KettleRecordMap">
+	<select id="allUnassignedRecords" resultMap="KettleRecordMap">
 		SELECT
 		<include refid="KettleRecord_Column_List" />
 		FROM
 		R_RECORD_JOB
 		WHERE
-		EXECUTION_TYPE = 'ONCE'
+		HOSTNAME = NULL
 		AND
-		STATUS IN
-		('FINISHED','RECORD_STATUS_ERROR')
+		STATUS = 'APPLY'
 	</select>
 
 	<select id="queryRecordRelations" parameterType="string"
@@ -75,7 +73,7 @@
 		WHERE MASTER_UUID_ID = #{masterUuid}
 	</select>
 
-	<insert id="insertRecord" parameterType="com.katch.perfer.mybatis.model.KettleRecord">
+	<insert id="insertRecord" parameterType="com.kettle.model.record.KettleRecord">
 		INSERT INTO
 		R_RECORD_JOB
 		(UUID, ID_JOB, NAME_JOB, ID_RUN, STATUS, HOSTNAME,
@@ -97,25 +95,25 @@
 		</foreach>
 	</insert>
 
-	<update id="updateRecord" parameterType="com.katch.perfer.mybatis.model.KettleRecord">
+	<update id="updateRecord" parameterType="com.kettle.model.record.KettleRecord">
 		UPDATE
 		R_RECORD_JOB
 		SET
 		<if test="jobid != null">ID_JOB = #{jobid},</if>
 		<if test="name != null">NAME_JOB = #{name},</if>
-		<if test="runID != null">ID_RUN = #{runID},</if>
 		<if test="status != null">STATUS = #{status},</if>
-		<if test="hostname != null">HOSTNAME = #{hostname},</if>
 		<if test="executionType != null">EXECUTION_TYPE = #{executionType},</if>
 		<if test="cronExpression != null">CRON_EXPRESSION = #{cronExpression},</if>
-		<if test="errMsg != null">ERROR_MSG = #{errMsg},</if>
-		<if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
+		HOSTNAME = #{hostname},
+		ERROR_MSG = #{errMsg},
+		ID_RUN = #{runID},
+		UPDATE_TIME = #{updateTime},
 		UUID = #{uuid}
 		WHERE
 		UUID = #{uuid}
 	</update>
 
-	<update id="updateRecordRelationID">
+	<update id="updateRecordRelationID" >
 		UPDATE
 		R_RECORD_DEPENDENT
 		SET

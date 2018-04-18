@@ -3,17 +3,17 @@ package com.kettle;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.kettle.config.KettleRecordProperties;
+
 @SpringBootApplication
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class,
-		JpaRepositoriesAutoConfiguration.class })
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
 @EnableScheduling
 @EnableTransactionManagement
 public class Application extends SpringBootServletInitializer {
@@ -28,6 +28,8 @@ public class Application extends SpringBootServletInitializer {
 		app.addListeners(new ApplicationFailedEventListener());
 		app.addListeners(new ApplicationPreparedEventListener());
 		app.addListeners(new ApplicationStartedEventListener());
-		app.run(args);
+		ConfigurableApplicationContext context = app.run(args);
+		KettleRecordProperties properties = context.getBean(KettleRecordProperties.class);
+		System.out.println(properties);
 	}
 }

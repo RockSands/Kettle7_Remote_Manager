@@ -1,4 +1,4 @@
-package com.kettle.model;
+package com.kettle.model.record;
 
 import java.util.Date;
 

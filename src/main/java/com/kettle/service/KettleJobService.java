@@ -2,7 +2,6 @@ package com.kettle.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import org.pentaho.di.core.exception.KettleException;
@@ -15,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.kettle.bean.KettleJobEntireDefine;
 import com.kettle.consist.KettleVariables;
-import com.kettle.model.KettleRecord;
+import com.kettle.model.record.KettleRecord;
 import com.kettle.repository.KettleRecordRepository;
 import com.kettle.repository.KettleRepoRepository;
 
@@ -176,13 +175,6 @@ public abstract class KettleJobService {
 			return;
 		}
 		jobMustDie(record);
-	}
-
-	/**
-	 * @return
-	 */
-	protected List<KettleRecord> getAllWaitingRecords() {
-		return kettleRecordRepository.allWaitingRecords();
 	}
 
 	/**
