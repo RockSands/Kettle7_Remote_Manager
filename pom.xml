@@ -233,7 +233,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
-                    <warName>Catch_Perfer</warName>
+                    <warName>Kettle7_Remote_Manager</warName>
                 </configuration>
             </plugin>
         </plugins>
