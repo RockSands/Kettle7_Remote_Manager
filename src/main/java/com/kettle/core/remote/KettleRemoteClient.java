@@ -12,7 +12,6 @@ import org.pentaho.di.www.WebResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import com.kettle.consist.KettleVariables;
 import com.kettle.model.record.KettleRecord;
@@ -30,7 +29,7 @@ public class KettleRemoteClient {
 	 * 日志
 	 */
 	private static Logger logger = LoggerFactory.getLogger(KettleRemoteClient.class);
-	
+
 	private final String hostName;
 
 	/**
@@ -56,29 +55,26 @@ public class KettleRemoteClient {
 	}
 
 	/**
-	 * 刷新Client状态
-	 */
-	@Scheduled(initialDelay = 1000, fixedRate = 10000)
-	public void refreshRemoteStatus() {
-		try {
-			SlaveServerStatus status = remoteServer.getStatus();
-			if (!KettleVariables.REMOTE_STATUS_RUNNING.equals(remoteStatus)) {
-				remoteStatus = KettleVariables.REMOTE_STATUS_ERROR;
-				logger.error("Kettle远端[" + getHostName() + "]异常状态:" + status.getStatusDescription());
-			}
-		} catch (Exception e) {
-			remoteStatus = KettleVariables.REMOTE_STATUS_ERROR;
-			logger.error("Kettle远端[" + getHostName() + "]查看状态发生异常\n", e);
-		}
-	}
-
-	/**
 	 * 是否运行状态
 	 * 
 	 * @return
 	 */
 	public boolean isRunning() {
 		return KettleVariables.REMOTE_STATUS_RUNNING.equals(remoteStatus);
+	}
+
+	public void refreshStatus() {
+		try {
+			SlaveServerStatus status = remoteServer.getStatus();
+			if (!KettleVariables.REMOTE_STATUS_RUNNING.equals(remoteStatus)) {
+				logger.error("Kettle远端[" + getHostName() + "]异常状态:" + status.getStatusDescription());
+				remoteStatus = KettleVariables.REMOTE_STATUS_ERROR;
+			} else {
+				remoteStatus = KettleVariables.REMOTE_STATUS_RUNNING;
+			}
+		} catch (Exception e) {
+			logger.error("Kettle远端[" + this.getHostName() + "]查询状态失败!", e);
+		}
 	}
 
 	/**
