@@ -47,7 +47,7 @@
 	<root level="ERROR">
 	</root>
 
-	<logger name="com.catch.perfer" level="DEBUG" additivity="false">
+	<logger name="com.kettle" level="DEBUG" additivity="false">
 		<appender-ref ref="INFO_LOG" />
 		<appender-ref ref="ERROR_LOG" />
 		<appender-ref ref="CONSOLE_LOG" />
