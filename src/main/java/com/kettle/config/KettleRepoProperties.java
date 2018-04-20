@@ -6,38 +6,39 @@ import org.springframework.stereotype.Component;
 
 /**
  * kettle的资源配置信息
+ * 
  * @author Administrator
  *
  */
 @Component
-@ConfigurationProperties(prefix="kettle.repository")
+@ConfigurationProperties(prefix = "kettle.repository")
 @PropertySource("classpath:/config/kettle_env.properties")
 public class KettleRepoProperties {
 	/**
 	 * ID
 	 */
 	private String id;
-	
+
 	/**
 	 * 名称
 	 */
 	private String name;
-	
+
 	/**
 	 * 描述
 	 */
 	private String description;
-	
+
 	/**
 	 * 基础路径
 	 */
 	private String baseDirectory;
-	
+
 	/**
 	 * User
 	 */
 	private String user;
-	
+
 	/**
 	 * 密码
 	 */

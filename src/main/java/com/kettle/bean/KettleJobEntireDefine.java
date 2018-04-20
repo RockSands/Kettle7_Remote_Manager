@@ -8,6 +8,7 @@ import org.pentaho.di.trans.TransMeta;
 
 /**
  * KettleJob的完整定义
+ * 
  * @author Administrator
  *
  */
@@ -28,7 +29,7 @@ public class KettleJobEntireDefine {
 	 * 依赖的Job
 	 */
 	private List<JobMeta> dependentJobs;
-	
+
 	public String getUuid() {
 		return uuid;
 	}

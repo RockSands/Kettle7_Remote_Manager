@@ -90,12 +90,4 @@ public class KettleNorthService {
 	public void deleteJobForce(String uuid) throws KettleException {
 		kettleJobService.deleteJobImmediately(uuid);
 	}
-
-	public KettleJobService getKettleJobService() {
-		return kettleJobService;
-	}
-
-	public void setKettleJobService(KettleJobService kettleJobService) {
-		this.kettleJobService = kettleJobService;
-	}
 }

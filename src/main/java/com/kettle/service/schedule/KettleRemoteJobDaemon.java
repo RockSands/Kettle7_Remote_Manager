@@ -1,5 +1,6 @@
 package com.kettle.service.schedule;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,29 +37,47 @@ public class KettleRemoteJobDaemon extends Thread {
 
 	@Override
 	public void run() {
-		List<KettleRecord> runningRecord = kettleRecordRepository.queryRunningRecordsByHostName(client.getHostName());
-		KettleRecord indexRecord;
+		List<KettleRecord> runningRecords = kettleRecordRepository.queryRunningRecordsByHostName(client.getHostName());
+		KettleRecord recordRoll;
+		Date now = new Date();
+		if (!client.isRunning()) {
+			// 网络连接失败!
+			for (Iterator<KettleRecord> it = runningRecords.iterator(); it.hasNext();) {
+				recordRoll = it.next();
+				recordRoll.setStatus(KettleVariables.RECORD_STATUS_ERROR);
+				recordRoll.setUpdateTime(now);
+				kettleRecordRepository.updateRecord(recordRoll);
+			}
+			return;
+		}
 		// 处理运行中的
-		for (Iterator<KettleRecord> it = runningRecord.iterator(); it.hasNext();) {
+		for (Iterator<KettleRecord> it = runningRecords.iterator(); it.hasNext();) {
+			recordRoll = it.next();
 			try {
-				indexRecord = it.next();
-				client.remoteJobStatus(indexRecord);
-				if (indexRecord.isFinished()) {
-					kettleRecordRepository.updateRecord(indexRecord);
-					client.remoteRemoveJobNE(indexRecord);
+				client.remoteJobStatus(recordRoll);
+				if (recordRoll.isFinished()) {
+					kettleRecordRepository.updateRecord(recordRoll);
+					client.remoteRemoveJobNE(recordRoll);
 					it.remove();
-				} else if (indexRecord.isRunning()) {
+				} else if (recordRoll.isRunning()) {
+					// TODO 超时
 					continue;
 				} else {
-					kettleRecordRepository.updateRecord(indexRecord);
+					kettleRecordRepository.updateRecord(recordRoll);
 					it.remove();
 				}
 			} catch (KettleException e) {
-				e.printStackTrace();
+				recordRoll.setStatus(KettleVariables.RECORD_STATUS_ERROR);
+				recordRoll.setErrMsg(e.getMessage());
+				kettleRecordRepository.updateRecord(recordRoll);
+				it.remove();
 			}
 		}
 		// 申请未运行的
-		int size = kettleRecordProperties.getMaxPreRemote() - runningRecord.size();
+		if (!client.isRunning()) {
+			return;
+		}
+		int size = kettleRecordProperties.getMaxPreRemote() - runningRecords.size();
 		List<KettleRecord> readyRecords = kettleRecordPool.next(size, client.getHostName());
 		for (KettleRecord kettleRecord : readyRecords) {
 			try {
