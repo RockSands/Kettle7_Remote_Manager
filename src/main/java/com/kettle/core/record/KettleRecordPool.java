@@ -15,7 +15,7 @@ public class KettleRecordPool {
 	@Autowired
 	private KettleRecordRepository kettleRecordRepository;
 
-	public List<KettleRecord> next(int size, String hostName) {
+	public synchronized List<KettleRecord> next(int size, String hostName) {
 		List<KettleRecord> records = kettleRecordRepository.allUnassignedRecords();
 		List<KettleRecord> applyRecords = new ArrayList<KettleRecord>(size);
 		KettleRecord update = new KettleRecord();
