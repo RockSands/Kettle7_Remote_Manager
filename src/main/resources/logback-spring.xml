@@ -8,17 +8,14 @@
 			<pattern>%d %logger{36} %msg%n</pattern>
 		</layout>
 	</appender>
-
-	<appender name="INFO_LOG"
+	<appender name="DEBUG_LOG"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-			<level>ERROR</level>
-			<onMatch>DENY</onMatch>
-			<onMismatch>ACCEPT</onMismatch>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>DEBUG</level>
 		</filter>
-		<File>${LOG_HOME}/info.log</File>
+		<File>${LOG_HOME}/debug.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>${LOG_HOME}/info.%d{yyyy-MM-dd}.log
+			<FileNamePattern>${LOG_HOME}/debug.%d{yyyy-MM-dd}.log
 			</FileNamePattern>
 			<maxHistory>90</maxHistory>
 		</rollingPolicy>
@@ -27,10 +24,13 @@
 			<pattern>%d [%thread] %-5level %logger{36} %line - %msg%n</pattern>
 		</encoder>
 	</appender>
+	
 	<appender name="ERROR_LOG"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-			<level>Error</level>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
 		</filter>
 		<File>${LOG_HOME}/error.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -46,10 +46,14 @@
 
 	<root level="ERROR">
 	</root>
-
 	<logger name="com.kettle" level="DEBUG" additivity="false">
-		<appender-ref ref="INFO_LOG" />
+		<appender-ref ref="DEBUG_LOG" />
 		<appender-ref ref="ERROR_LOG" />
 		<appender-ref ref="CONSOLE_LOG" />
 	</logger>
+	<logger name="com.kettle.mapper" level="ERROR" additivity="false">
+		<appender-ref ref="ERROR_LOG" />
+		<appender-ref ref="CONSOLE_LOG" />
+	</logger>
+
 </configuration>
