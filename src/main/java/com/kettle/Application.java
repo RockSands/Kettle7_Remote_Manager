@@ -43,9 +43,9 @@ public class Application extends SpringBootServletInitializer {
 
 		KettleNorthService service = context.getBean(KettleNorthService.class);
 		System.out.println("------------------------------");
-		List<String> flags = Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
-				"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z");
-		// List<String> flags = Arrays.asList("A");
+//		List<String> flags = Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
+//				"P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z");
+		 List<String> flags = Arrays.asList("A");
 		KettleTableMeta source = null;
 		KettleTableMeta target = null;
 		List<KettleJobEntireDefine> kettleJobEntireDefines = new ArrayList<KettleJobEntireDefine>();

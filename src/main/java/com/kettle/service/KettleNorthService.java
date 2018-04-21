@@ -12,7 +12,7 @@ import com.kettle.model.record.KettleRecord;
 public class KettleNorthService {
 	@Autowired
 	private KettleJobService kettleJobService;
-
+	
 	/**
 	 * 
 	 * @param jobEntire
@@ -27,6 +27,7 @@ public class KettleNorthService {
 		result.setErrMsg(record.getErrMsg());
 		return result;
 	}
+
 
 	/**
 	 * 注册一个Job,只有调用Excute才开始执行

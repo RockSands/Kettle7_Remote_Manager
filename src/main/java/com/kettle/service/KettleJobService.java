@@ -77,6 +77,7 @@ public abstract class KettleJobService {
 	 * @throws KettleException
 	 */
 	public KettleRecord excuteJobOnce(KettleJobEntireDefine jobEntire) throws KettleException {
+		checkStatus();
 		checkKettleJobEntireDefine(jobEntire);
 		KettleRecord record = savejobEntire2KettleRepo(jobEntire, null);
 		record.setStatus(KettleVariables.RECORD_STATUS_APPLY);
@@ -97,6 +98,7 @@ public abstract class KettleJobService {
 	 * @throws KettleException
 	 */
 	public KettleRecord registeJob(KettleJobEntireDefine jobEntire) throws KettleException {
+		checkStatus();
 		checkKettleJobEntireDefine(jobEntire);
 		KettleRecord record = savejobEntire2KettleRepo(jobEntire, KettleVariables.RECORD_EXECUTION_TYPE_PERSISTENT);
 		record.setStatus(KettleVariables.RECORD_STATUS_REGISTE);
@@ -118,6 +120,7 @@ public abstract class KettleJobService {
 	 * @throws KettleException
 	 */
 	public void excuteJob(String uuid) throws KettleException {
+		checkStatus();
 		KettleRecord record = kettleRecordRepository.queryRecord(uuid);
 		if (record == null) {
 			throw new KettleException("Job[" + uuid + "]未找到,请先注册!");
@@ -144,6 +147,7 @@ public abstract class KettleJobService {
 	 * @throws KettleException
 	 */
 	public void deleteJob(String uuid) throws KettleException {
+		checkStatus();
 		KettleRecord record = kettleRecordRepository.queryRecord(uuid);
 		if (record == null) {
 			return;
@@ -164,6 +168,7 @@ public abstract class KettleJobService {
 	 * @throws KettleException
 	 */
 	public void deleteJobImmediately(String uuid) throws KettleException {
+		checkStatus();
 		KettleRecord record = kettleRecordRepository.queryRecord(uuid);
 		if (record == null) {
 			return;
@@ -186,6 +191,12 @@ public abstract class KettleJobService {
 	protected abstract void jobMustDie(KettleRecord record) throws KettleException;
 
 	/**
+	 * 查看状态
+	 * 
+	 */
+	protected abstract void checkStatus() throws KettleException;
+
+	/**
 	 * 查询JOB
 	 * 
 	 * @param uuid
@@ -193,21 +204,5 @@ public abstract class KettleJobService {
 	 */
 	public KettleRecord queryJob(String uuid) {
 		return kettleRecordRepository.queryRecord(uuid);
-	}
-
-	public KettleRecordRepository getKettleRecordRepository() {
-		return kettleRecordRepository;
-	}
-
-	public void setKettleRecordRepository(KettleRecordRepository kettleRecordRepository) {
-		this.kettleRecordRepository = kettleRecordRepository;
-	}
-
-	public KettleRepoRepository getKettleRepoRepository() {
-		return kettleRepoRepository;
-	}
-
-	public void setKettleRepoRepository(KettleRepoRepository kettleRepoRepository) {
-		this.kettleRepoRepository = kettleRepoRepository;
 	}
 }

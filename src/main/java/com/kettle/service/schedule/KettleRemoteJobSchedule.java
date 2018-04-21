@@ -56,4 +56,11 @@ public class KettleRemoteJobSchedule extends KettleJobService {
 		client.remoteStopJobNE(record);
 		client.remoteRemoveJobNE(record);
 	}
+
+	@Override
+	protected void checkStatus() throws KettleException {
+		if(!kettleRemotePool.isRunning()) {
+			throw new KettleException("Kettle没有可用的远端节点!");
+		}
+	}
 }

@@ -139,7 +139,11 @@ public class KettleRemotePool {
 		return remoteclients.get(hostname);
 	}
 
-	public String getPoolStatus() {
-		return poolStatus;
+	/**
+	 * 是否运行中
+	 * @return
+	 */
+	public boolean isRunning() {
+		return KettleVariables.REMOTE_STATUS_RUNNING.equals(poolStatus);
 	}
 }
