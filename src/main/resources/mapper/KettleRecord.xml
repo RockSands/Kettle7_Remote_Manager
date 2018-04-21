@@ -74,6 +74,17 @@
 		AND
 		STATUS = 'APPLY'
 	</select>
+	
+	<select id="allCanDelRecords" resultMap="KettleRecordMap">
+		SELECT
+		<include refid="KettleRecord_Column_List" />
+		FROM
+		R_RECORD_JOB
+		WHERE
+		EXECUTION_TYPE = 'ONCE'
+		AND
+		STATUS IN ('ERROR', 'FINISHED')
+	</select>
 
 	<select id="queryRecordRelations" parameterType="string"
 		resultMap="KettleRecordRelationMap">

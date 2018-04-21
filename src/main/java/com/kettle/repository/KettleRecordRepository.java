@@ -62,9 +62,23 @@ public class KettleRecordRepository {
 		return kettleRecordMapper.queryRunningRecordsByHostName(hostName);
 	}
 
+	/**
+	 * 获取Cline端的待运行的任务
+	 * @param hostName
+	 * @return
+	 */
 	@Transactional(readOnly = true)
 	public List<KettleRecord> queryApplyRecordsByHostName(String hostName) {
 		return kettleRecordMapper.queryApplyRecordsByHostName(hostName);
+	}
+	
+
+	/**
+	 * 获取可删除任务
+	 * @return
+	 */
+	public List<KettleRecord> allCanDelRecords() {
+		return kettleRecordMapper.allCanDelRecords();
 	}
 
 	/**

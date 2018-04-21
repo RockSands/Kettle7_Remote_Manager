@@ -17,10 +17,12 @@ public interface KettleRecordMapper {
     
     List<KettleRecord> allUnassignedRecords();
     
+	List<KettleRecord> allCanDelRecords();
+    
     List<KettleRecord> queryRunningRecordsByHostName(@Param("hostname")String hostname);
     
     List<KettleRecord> queryApplyRecordsByHostName(@Param("hostname")String hostname);
-
+    
     int insertRecord(KettleRecord record);
 
     int insertRecordRelations(@Param("list") List<KettleRecordRelation> recordRelations);
@@ -33,6 +35,4 @@ public interface KettleRecordMapper {
     int deleteRecord(@Param("uuid") String uuid);
 
     int deleteRecordRelations(@Param("masterUUID") String masterUUID);
-
-	
 }

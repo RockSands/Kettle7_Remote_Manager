@@ -13,6 +13,9 @@ public class KettleRecordProperties {
 
 	@Value("${kettle.record.run.timeout}")
 	private int runTimeout;
+	
+	@Value("${kettle.record.once.save.period}")
+	private int onceRecordSavePeriod;
 
 	public int getMaxPreRemote() {
 		return maxPreRemote;
@@ -28,5 +31,13 @@ public class KettleRecordProperties {
 
 	public void setRunTimeout(int runTimeout) {
 		this.runTimeout = runTimeout;
+	}
+
+	public int getOnceRecordSavePeriod() {
+		return onceRecordSavePeriod;
+	}
+
+	public void setOnceRecordSavePeriod(int onceRecordSavePeriod) {
+		this.onceRecordSavePeriod = onceRecordSavePeriod;
 	}
 }
