@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
 <configuration scan="true" scanPeriod="60 seconds">
-	<property name="LOG_HOME" value="/logs/CatchPerfer" />
+	<property name="LOG_HOME" value="/logs/Kettle" />
 
 	<appender name="CONSOLE_LOG" class="ch.qos.logback.core.ConsoleAppender">
 		<layout class="ch.qos.logback.classic.PatternLayout">
