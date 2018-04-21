@@ -54,7 +54,7 @@ public class KettleRemotePool {
 			addRemoteClient(new KettleRemoteClient(kettleRepoRepository, server));
 			hostNames.add(server.getHostname());
 		}
-		logger.info("Kettle远程池已经加载Client" + remoteclients.keySet());
+		logger.info("Kettle远程池已加载Client" + remoteclients.keySet());
 	}
 
 	@PostConstruct

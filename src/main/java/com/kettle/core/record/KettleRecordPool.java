@@ -22,7 +22,8 @@ public class KettleRecordPool {
 		for (KettleRecord record : records) {
 			update.setHostname(hostName);
 			update.setUuid(record.getUuid());
-			if (kettleRecordRepository.updateRecord(record) == 1) {
+			if (kettleRecordRepository.updateRecord(update) == 1) {
+				record.setHostname(hostName);
 				applyRecords.add(record);
 				if (applyRecords.size() == size) {
 					return applyRecords;

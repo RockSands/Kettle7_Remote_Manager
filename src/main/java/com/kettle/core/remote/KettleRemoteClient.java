@@ -108,7 +108,7 @@ public class KettleRemoteClient {
     public void remoteStartJob(KettleRecord job) throws KettleException {
 	WebResult result;
 	try {
-	    result = remoteServer.startJob(job.getName(), job.getRunID());
+	    result = remoteServer.startJob(job.getJobid(), job.getRunID());
 	} catch (Exception e) {
 	    throw new KettleException("Kettle远端[" + this.getHostName() + "]启动Job[" + job.getUuid() + "]失败!", e);
 	}

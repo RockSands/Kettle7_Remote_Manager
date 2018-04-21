@@ -16,8 +16,7 @@
 		<result column="UPDATE_TIME" property="updateTime" />
 	</resultMap>
 
-	<resultMap id="KettleRecordRelationMap"
-		type="com.kettle.model.record.KettleRecordRelation">
+	<resultMap id="KettleRecordRelationMap" type="com.kettle.model.record.KettleRecordRelation">
 		<result column="MASTER_UUID_ID" property="masterUUID" />
 		<result column="META_ID" property="metaid" />
 		<result column="META_TYPE" property="type" />
@@ -42,8 +41,19 @@
 		WHERE
 		UUID = #{uuid}
 	</select>
-	
+
 	<select id="queryRunningRecordsByHostName" resultMap="KettleRecordMap">
+		SELECT
+		<include refid="KettleRecord_Column_List" />
+		FROM
+		R_RECORD_JOB
+		WHERE
+		HOSTNAME = #{hostname}
+		AND
+		STATUS = 'RUNNING'
+	</select>
+
+	<select id="queryApplyRecordsByHostName" resultMap="KettleRecordMap">
 		SELECT
 		<include refid="KettleRecord_Column_List" />
 		FROM
@@ -113,7 +123,7 @@
 		UUID = #{uuid}
 	</update>
 
-	<update id="updateRecordRelationID" >
+	<update id="updateRecordRelationID">
 		UPDATE
 		R_RECORD_DEPENDENT
 		SET

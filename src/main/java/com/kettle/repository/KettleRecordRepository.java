@@ -24,6 +24,7 @@ public class KettleRecordRepository {
 	 * @return
 	 * @throws KettleException
 	 */
+	@Transactional(readOnly = true)
 	public KettleRecord queryRecord(String uuid) {
 		return kettleRecordMapper.queryRecord(uuid);
 	}
@@ -34,6 +35,7 @@ public class KettleRecordRepository {
 	 * @param record
 	 * @return
 	 */
+	@Transactional(readOnly = true)
 	public KettleRecord queryRecordRelations(KettleRecord record) {
 		List<KettleRecordRelation> kettleRecordRelations = kettleRecordMapper.queryRecordRelations(record.getUuid());
 		record.getRelations().clear();
@@ -44,17 +46,25 @@ public class KettleRecordRepository {
 	/**
 	 * @return
 	 */
+	@Transactional(readOnly = true)
 	public List<KettleRecord> allUnassignedRecords() {
 		return kettleRecordMapper.allUnassignedRecords();
 	}
-	
+
 	/**
 	 * 获取Cline端的运行中任务
+	 * 
 	 * @param hostName
 	 * @return
 	 */
+	@Transactional(readOnly = true)
 	public List<KettleRecord> queryRunningRecordsByHostName(String hostName) {
 		return kettleRecordMapper.queryRunningRecordsByHostName(hostName);
+	}
+
+	@Transactional(readOnly = true)
+	public List<KettleRecord> queryApplyRecordsByHostName(String hostName) {
+		return kettleRecordMapper.queryApplyRecordsByHostName(hostName);
 	}
 
 	/**

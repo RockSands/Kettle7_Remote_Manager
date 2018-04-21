@@ -60,8 +60,15 @@ public class KettleRemoteJobDaemon extends Thread {
 					client.remoteRemoveJobNE(recordRoll);
 					it.remove();
 				} else if (recordRoll.isRunning()) {
-					// TODO 超时
-					continue;
+					if (kettleRecordProperties.getRunTimeout() > 0
+							&& ((System.currentTimeMillis() - recordRoll.getUpdateTime().getTime())
+									/ 60000L) > kettleRecordProperties.getRunTimeout()) {
+						recordRoll.setStatus(KettleVariables.RECORD_STATUS_ERROR);
+						recordRoll.setErrMsg("Kettle的任务[" + recordRoll.getUuid() + "]执行超时!");
+						kettleRecordRepository.updateRecord(recordRoll);
+						client.remoteRemoveJobNE(recordRoll);
+						it.remove();
+					}
 				} else {
 					kettleRecordRepository.updateRecord(recordRoll);
 					it.remove();
@@ -74,14 +81,24 @@ public class KettleRemoteJobDaemon extends Thread {
 			}
 		}
 		// 申请未运行的
-		if (!client.isRunning()) {
+		List<KettleRecord> applyRecords = kettleRecordRepository.queryApplyRecordsByHostName(client.getHostName());
+		if (!client.isRunning()) {// 如果未运行,将改所属Apply任务释放
+			KettleRecord update = null;
+			for (KettleRecord record : applyRecords) {
+				update = new KettleRecord();
+				update.setHostname(null);
+				update.setUuid(record.getUuid());
+				kettleRecordRepository.updateRecord(update);
+			}
 			return;
 		}
-		int size = kettleRecordProperties.getMaxPreRemote() - runningRecords.size();
-		List<KettleRecord> readyRecords = kettleRecordPool.next(size, client.getHostName());
-		for (KettleRecord kettleRecord : readyRecords) {
+		int size = kettleRecordProperties.getMaxPreRemote() - runningRecords.size() - applyRecords.size();
+		if(size > 0) {
+			applyRecords.addAll(kettleRecordPool.next(size, client.getHostName()));
+		}
+		for (KettleRecord kettleRecord : applyRecords) {
 			try {
-				client.remoteStartJob(kettleRecord);
+				client.remoteSendJob(kettleRecord);
 				kettleRecord.setStatus(KettleVariables.RECORD_STATUS_RUNNING);
 			} catch (KettleException e) {
 				kettleRecord.setStatus(KettleVariables.RECORD_STATUS_ERROR);

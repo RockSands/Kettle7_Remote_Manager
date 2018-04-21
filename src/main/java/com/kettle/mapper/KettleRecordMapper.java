@@ -18,6 +18,8 @@ public interface KettleRecordMapper {
     List<KettleRecord> allUnassignedRecords();
     
     List<KettleRecord> queryRunningRecordsByHostName(@Param("hostname")String hostname);
+    
+    List<KettleRecord> queryApplyRecordsByHostName(@Param("hostname")String hostname);
 
     int insertRecord(KettleRecord record);
 
