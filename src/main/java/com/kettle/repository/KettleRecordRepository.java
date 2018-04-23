@@ -64,6 +64,7 @@ public class KettleRecordRepository {
 
 	/**
 	 * 获取Cline端的待运行的任务
+	 * 
 	 * @param hostName
 	 * @return
 	 */
@@ -71,10 +72,10 @@ public class KettleRecordRepository {
 	public List<KettleRecord> queryApplyRecordsByHostName(String hostName) {
 		return kettleRecordMapper.queryApplyRecordsByHostName(hostName);
 	}
-	
 
 	/**
 	 * 获取可删除任务
+	 * 
 	 * @return
 	 */
 	public List<KettleRecord> allCanDelRecords() {
@@ -109,6 +110,15 @@ public class KettleRecordRepository {
 		return kettleRecordMapper.updateRecord(record);
 	}
 
+	@Transactional()
+	public int assignedRecord(String uuid, String hostName) {
+		KettleRecord record = new KettleRecord();
+		record.setUuid(uuid);
+		record.setHostname(hostName);
+		record.setUpdateTime(new Date());
+		return kettleRecordMapper.assignedRecord(record);
+	}
+
 	/**
 	 * 删除Record
 	 * 
@@ -119,4 +129,5 @@ public class KettleRecordRepository {
 		kettleRecordMapper.deleteRecord(uuid);
 		kettleRecordMapper.deleteRecordRelations(uuid);
 	}
+
 }

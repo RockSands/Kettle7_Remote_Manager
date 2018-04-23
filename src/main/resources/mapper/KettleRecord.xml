@@ -74,7 +74,7 @@
 		AND
 		STATUS = 'APPLY'
 	</select>
-	
+
 	<select id="allCanDelRecords" resultMap="KettleRecordMap">
 		SELECT
 		<include refid="KettleRecord_Column_List" />
@@ -83,7 +83,8 @@
 		WHERE
 		EXECUTION_TYPE = 'ONCE'
 		AND
-		STATUS IN ('ERROR', 'FINISHED')
+		STATUS IN ('ERROR',
+		'FINISHED')
 	</select>
 
 	<select id="queryRecordRelations" parameterType="string"
@@ -125,13 +126,27 @@
 		<if test="status != null">STATUS = #{status},</if>
 		<if test="executionType != null">EXECUTION_TYPE = #{executionType},</if>
 		<if test="cronExpression != null">CRON_EXPRESSION = #{cronExpression},</if>
+		<if test="updateTime != null">UPDATE_TIME = #{updateTime},</if>
 		HOSTNAME = #{hostname},
 		ERROR_MSG = #{errMsg},
 		ID_RUN = #{runID},
-		UPDATE_TIME = #{updateTime},
-		UUID = #{uuid}
+		UUID =
+		#{uuid}
 		WHERE
 		UUID = #{uuid}
+	</update>
+
+	<update id="assignedRecord" parameterType="com.kettle.model.record.KettleRecord">
+		UPDATE
+		R_RECORD_JOB
+		SET
+		HOSTNAME = #{hostname},
+		UPDATE_TIME = #{updateTime}
+		WHERE
+		UUID
+		= #{uuid}
+		AND HOSTNAME IS NULL 
+		AND STATUS = 'APPLY'
 	</update>
 
 	<update id="updateRecordRelationID">

@@ -28,6 +28,8 @@ public interface KettleRecordMapper {
     int insertRecordRelations(@Param("list") List<KettleRecordRelation> recordRelations);
 
     int updateRecord(KettleRecord record);
+    
+    int assignedRecord(KettleRecord record);
 
     int updateRecordRelationID(@Param("newID") String newID, @Param("createTime") Date createTime,
 	    @Param("oldID") String oldID);
@@ -35,4 +37,5 @@ public interface KettleRecordMapper {
     int deleteRecord(@Param("uuid") String uuid);
 
     int deleteRecordRelations(@Param("masterUUID") String masterUUID);
+
 }

@@ -19,7 +19,7 @@ import com.kettle.bean.KettleJobEntireDefine;
 import com.kettle.bean.KettleResult;
 import com.kettle.consist.KettleVariables;
 import com.kettle.meta.KettleTableMeta;
-import com.kettle.meta.builder.SyncTablesDatasBuilder;
+import com.kettle.meta.builder.TableDataMigrationBuilder;
 import com.kettle.service.KettleNorthService;
 
 @SpringBootApplication
@@ -87,7 +87,7 @@ public class Application extends SpringBootServletInitializer {
 				target.setSql("SELECT empID, deptID, firstName, lastName, born FROM target_employees_" + flag);
 				target.setTableName("target_employees_" + flag);
 			}
-			kettleJobEntireDefines.add(SyncTablesDatasBuilder.newBuilder().source(source).target(target).createJob());
+			kettleJobEntireDefines.add(TableDataMigrationBuilder.newBuilder().source(source).target(target).createJob());
 		}
 		// 注册
 		List<KettleResult> kettleResults = new ArrayList<KettleResult>();
@@ -101,19 +101,19 @@ public class Application extends SpringBootServletInitializer {
 		for (KettleJobEntireDefine kettleJobEntireDefine : kettleJobEntireDefines) {
 			kettleResults.add(service.excuteJobOnce(kettleJobEntireDefine));
 		}
-		KettleResult roll;
-		KettleResult result;
-		while (!kettleResults.isEmpty()) {
-			Thread.sleep(5000);
-			for (Iterator<KettleResult> it = kettleResults.iterator(); it.hasNext();) {
-				roll = it.next();
-				result = service.queryJob(roll.getUuid());
-				if (KettleVariables.RECORD_STATUS_ERROR.equals(result.getStatus())
-						|| KettleVariables.RECORD_STATUS_FINISHED.equals(result.getStatus())) {
-					it.remove();
-				}
-			}
-		}
+//		KettleResult roll;
+//		KettleResult result;
+//		while (!kettleResults.isEmpty()) {
+//			Thread.sleep(5000);
+//			for (Iterator<KettleResult> it = kettleResults.iterator(); it.hasNext();) {
+//				roll = it.next();
+//				result = service.queryJob(roll.getUuid());
+//				if (KettleVariables.RECORD_STATUS_ERROR.equals(result.getStatus())
+//						|| KettleVariables.RECORD_STATUS_FINISHED.equals(result.getStatus())) {
+//					it.remove();
+//				}
+//			}
+//		}
 	}
 
 }

@@ -15,14 +15,11 @@ public class KettleRecordPool {
 	@Autowired
 	private KettleRecordRepository kettleRecordRepository;
 
-	public synchronized List<KettleRecord> next(int size, String hostName) {
+	public List<KettleRecord> next(int size, String hostName) {
 		List<KettleRecord> records = kettleRecordRepository.allUnassignedRecords();
 		List<KettleRecord> applyRecords = new ArrayList<KettleRecord>(size);
-		KettleRecord update = new KettleRecord();
 		for (KettleRecord record : records) {
-			update.setHostname(hostName);
-			update.setUuid(record.getUuid());
-			if (kettleRecordRepository.updateRecord(update) == 1) {
+			if (kettleRecordRepository.assignedRecord(record.getUuid(),hostName) == 1) {
 				record.setHostname(hostName);
 				applyRecords.add(record);
 				if (applyRecords.size() == size) {
