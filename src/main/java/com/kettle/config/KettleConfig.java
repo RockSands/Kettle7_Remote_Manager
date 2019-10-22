@@ -1,6 +1,7 @@
 package com.kettle.config;
 
 import org.pentaho.di.cluster.SlaveServer;
+import org.pentaho.di.core.KettleEnvironment;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.repository.Repository;
 import org.pentaho.di.repository.RepositoryMeta;
@@ -13,7 +14,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.kettle.core.record.KettleRecordPool;
 import com.kettle.core.remote.KettleRemotePool;
 import com.kettle.repository.KettleRepoRepository;
 
@@ -28,9 +28,13 @@ public class KettleConfig {
 	@Autowired
 	private KettleRepoProperties repoProperties;
 
+	@Autowired
+	private KettleRecordProperties recordProperties;
+
 	@Bean
 	public Repository kettleRepo() throws KettleException {
 		logger.info("Kettle的客户端正在初始化....");
+		KettleEnvironment.init();
 		KettleFileRepository repository = new KettleFileRepository();
 		RepositoryMeta repositoryMeta = new KettleFileRepositoryMeta(repoProperties.getId(), repoProperties.getName(),
 				repoProperties.getDescription(), repoProperties.getBaseDirectory());
@@ -47,13 +51,21 @@ public class KettleConfig {
 		return repository;
 	}
 
+	/**
+	 * Kettle的资源库
+	 * 
+	 * @return
+	 * @throws KettleException
+	 */
+	@Bean
+	public KettleRepoRepository kettleRepoRepository(Repository repository) throws KettleException {
+		logger.info("Kettle的资源库在初始化....");
+		return new KettleRepoRepository(repoProperties, repository);
+	}
+	
 	@Bean
 	public KettleRemotePool kettleRemotePool(KettleRepoRepository kettleRepoRepository) throws KettleException {
+		logger.info("Kettle的远程节点池在初始化....");
 		return new KettleRemotePool(kettleRepoRepository);
-	}
-
-	@Bean
-	public KettleRecordPool kettleRecordPool() throws KettleException {
-		return new KettleRecordPool();
 	}
 }

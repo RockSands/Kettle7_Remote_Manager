@@ -12,6 +12,12 @@ import com.kettle.mapper.KettleRecordMapper;
 import com.kettle.model.record.KettleRecord;
 import com.kettle.model.record.KettleRecordRelation;
 
+/**
+ * 
+ * Kettle任务记录资源库(MySql)
+ * @author Administrator
+ *
+ */
 @Component
 public class KettleRecordRepository {
 	@Autowired

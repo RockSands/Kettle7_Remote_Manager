@@ -118,7 +118,8 @@ public class KettleRemoteJobDaemon extends Thread {
 				logger.debug("Kettle-Client[" + client.getHostName() + "]任务管理信息,启动任务[" + kettleRecord.getUuid() + "]!");
 			} catch (KettleException e) {
 				kettleRecord.setStatus(KettleVariables.RECORD_STATUS_ERROR);
-				logger.debug("Kettle-Client[" + client.getHostName() + "]任务管理信息,异常任务[" + kettleRecord.getUuid() + "]!",e);
+				logger.debug("Kettle-Client[" + client.getHostName() + "]任务管理信息,异常任务[" + kettleRecord.getUuid() + "]!",
+						e);
 			}
 			kettleRecordRepository.updateRecord(kettleRecord);
 		}

@@ -11,7 +11,6 @@ import org.pentaho.di.www.SlaveServerStatus;
 import org.pentaho.di.www.WebResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.kettle.consist.KettleVariables;
 import com.kettle.model.record.KettleRecord;
@@ -24,28 +23,25 @@ import com.kettle.repository.KettleRepoRepository;
  *
  */
 public class KettleRemoteClient {
-
 	/**
 	 * 日志
 	 */
 	private static Logger logger = LoggerFactory.getLogger(KettleRemoteClient.class);
-
+	/**
+	 * 名称
+	 */
 	private final String hostName;
-
 	/**
 	 * 远端状态
 	 */
 	private String remoteStatus;
-
 	/**
 	 * 远程服务
 	 */
 	private final SlaveServer remoteServer;
-
 	/**
 	 * Kettle资源库
 	 */
-	@Autowired
 	private final KettleRepoRepository kettleRepoRepository;
 
 	public KettleRemoteClient(KettleRepoRepository kettleRepoRepository, SlaveServer remoteServer) {

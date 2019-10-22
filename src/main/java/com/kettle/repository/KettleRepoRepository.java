@@ -20,10 +20,6 @@ import org.pentaho.di.repository.filerep.KettleFileRepositoryMeta;
 import org.pentaho.di.trans.TransMeta;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.stereotype.Component;
 
 import com.kettle.bean.KettleJobEntireDefine;
 import com.kettle.config.KettleRepoProperties;
@@ -37,22 +33,25 @@ import com.kettle.model.record.KettleRecordRelation;
  * @author Administrator
  *
  */
-@Component
-@EnableAutoConfiguration
 public class KettleRepoRepository {
 	/**
 	 * 日志
 	 */
 	private static Logger logger = LoggerFactory.getLogger(KettleRepoRepository.class);
 
-	@Autowired
+	/**
+	 * 配置
+	 */
 	private KettleRepoProperties repoProperties;
 	/**
 	 * 资源库
 	 */
-	@Autowired
-	@Qualifier("kettleRepo")
 	private Repository repository;
+	
+	public KettleRepoRepository(KettleRepoProperties repoProperties,Repository repository) {
+		this.repository = repository;
+		this.repoProperties = repoProperties;
+	}
 
 	/**
 	 * 获取资源库

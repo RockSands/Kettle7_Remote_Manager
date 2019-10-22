@@ -65,8 +65,9 @@ public class KettleRemotePool {
 	/**
 	 * 更新Client的定义
 	 */
-	@Scheduled(initialDelay = 10, fixedRate = 10L * 60L * 1000L)
+	@Scheduled(initialDelay = 10, fixedRate = 10L * 1000L)
 	public void refreshRemoteDefine() {
+		logger.info("Kettle远程池监控远端状态启动:");
 		try {
 			for (SlaveServer server : kettleRepoRepository.getSlaveServers()) {
 				if (!hostNames.contains(server.getHostname())) {
@@ -141,6 +142,7 @@ public class KettleRemotePool {
 
 	/**
 	 * 是否运行中
+	 * 
 	 * @return
 	 */
 	public boolean isRunning() {
